@@ -1,6 +1,6 @@
-// Enkitek.cpp
+// Mks.cpp
 
-#include "Enkitek.h"
+#include "Mks.h"
 #include <Arduino.h>
 #include <WiFiClientSecure.h>
 #include "Config.h"
@@ -8,7 +8,7 @@
 
 
 
-void Enkitek::setup_wifi() {  
+void Mks::setup_wifi() {  
   delay(10);
   // We start by connecting to a WiFi network
   Serial.println();

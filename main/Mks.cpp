@@ -1,8 +1,8 @@
-// Enkitek.cpp
+// Mks.cpp
 
-#include "Enkitek.h"
+#include "Mks.h"
 #include <Arduino.h>
-#include "EnkitekCrons.h"
+#include "MksCrons.h"
 #include <time.h>    
 #include "Config.h"
 #include <NTPClient.h>
@@ -34,10 +34,10 @@ void resetSensorCron(const char* targetUUID) {
               Cron.free(stringArray[i].crons[j].cronId); 
               stringArray[i].crons[j].cronId;             
             }  
-            IOTcrons enkiCrons[1];         
-            enkiCrons[0].cronId = dtINVALID_ALARM_ID;
-            enkiCrons[0].state = "";
-            stringArray[i].crons[0] = enkiCrons[0];            
+            IOTcrons mksCrons[1];         
+            mksCrons[0].cronId = dtINVALID_ALARM_ID;
+            mksCrons[0].state = "";
+            stringArray[i].crons[0] = mksCrons[0];            
             stringArray[i].numCrons = 0;
           
         }
@@ -50,7 +50,7 @@ struct sensor* findSensorByCronId(const int cronId) {
         int numCrons = stringArray[i].numCrons;
         for (int j = 0; j < numCrons; j++) {
             if (stringArray[i].crons[j].cronId == cronId) {
-              enkiDevice device = {
+              mksDevice device = {
                 stringArray[i].uuid,                
                 stringArray[i].crons[j].state
               };
@@ -62,13 +62,13 @@ struct sensor* findSensorByCronId(const int cronId) {
     return NULL; // Sensor not found
 }
 
-void enkiNextCronTime(){
+void mksNextCronTime(){
   time_t nextTriggerAny = Cron.getNextTrigger();
   Serial.print("Next scheduled alarm for any: ");
   Serial.println(ctime(&nextTriggerAny));
 
 }
-void enkiNextCronTime(const int cronId){
+void mksNextCronTime(const int cronId){
   time_t nextTriggerAny = Cron.getNextTrigger(cronId);
 
 
@@ -90,7 +90,7 @@ void Repeats() {
 }
 
 void setTimeFaild(){
-  enkiLog log;
+  mksLog log;
   for (int i = 0; i < stringArrayCount; i++) {      
       log = {stringArray[i].uuid, "","Failed to set system time"};
       triggerLog(&log);      
@@ -98,10 +98,10 @@ void setTimeFaild(){
 }
 
 
-void Enkitek::setCronDelay(){
+void Mks::setCronDelay(){
   Cron.delay();
 }
-void Enkitek::setCronInit() {  
+void Mks::setCronInit() {  
   timeClient.setTimeOffset(3600); 
   if (!updateTime()) {
     Serial.println("Failed to obtain time");    
@@ -137,6 +137,6 @@ void Enkitek::setCronInit() {
   
     // Serial.println(data);
 }
-int Enkitek::setCron(char* cronExp) {    
+int Mks::setCron(char* cronExp) {    
   return Cron.create(cronExp, Repeats, false);             
 }

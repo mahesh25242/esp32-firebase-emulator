@@ -1,12 +1,12 @@
-// Enkitek.cpp
+// Mks.cpp
 
-#include "Enkitek.h"
+#include "Mks.h"
 #include <Arduino.h>
 #include <WiFiClientSecure.h>
 #include "Config.h"
 #include <PubSubClient.h>
 #include <ArduinoJson.h>
-#include "EnkitekCrons.h"
+#include "MksCrons.h"
 
 
 
@@ -70,14 +70,14 @@ void mqtt_callback(char* topic, byte* message, unsigned int length) {
               
   
   if(jsonDoc.containsKey("state")){    
-    enkiDevice device;
+    mksDevice device;
     device.state = jsonDoc["state"].as<const char*>();    
     device.uuid = topic;    
     triggerAction(&device);    
   }else if(jsonDoc.containsKey("configuration")){
       int cronsCount = jsonDoc["configuration"]["crons"].size();
       JsonArray arr = jsonDoc["configuration"]["crons"].as<JsonArray>();
-      IOTcrons enkiCrons[cronsCount];
+      IOTcrons mksCrons[cronsCount];
       resetSensorCron(topic);
       int i = 0;     
       for (JsonObject cronExpr : arr) {
@@ -89,19 +89,19 @@ void mqtt_callback(char* topic, byte* message, unsigned int length) {
           char stateCopy[strlen(state) + 1];
           strcpy(stateCopy, state);
 
-          int id = enki.setCron(cronCopy);   
+          int id = mks.setCron(cronCopy);   
           if(id != dtINVALID_ALARM_ID){
-            enkiCrons[i].cronId = id;
-            enkiCrons[i].state = strdup(stateCopy);
+            mksCrons[i].cronId = id;
+            mksCrons[i].state = strdup(stateCopy);
             Serial.println("CronId");             
-           Serial.println(enkiCrons[i].cronId);    
+           Serial.println(mksCrons[i].cronId);    
           }else{
             Serial.println("Invalid cron expression");
             char message[100];  
             sprintf(message, "Invalid cron is setting to %s", state);
 
 
-            enkiLog log = {topic, "FAIL",message};
+            mksLog log = {topic, "FAIL",message};
             triggerLog(&log);
           }
           
@@ -110,9 +110,9 @@ void mqtt_callback(char* topic, byte* message, unsigned int length) {
            i++;
       }  
       if(cronsCount > 0){        
-        bool updated = updateCronIdByUUID(topic, cronsCount, enkiCrons, jsonDoc["version"].as<String>());        
+        bool updated = updateCronIdByUUID(topic, cronsCount, mksCrons, jsonDoc["version"].as<String>());        
 
-        enkiNextCronTime();
+        mksNextCronTime();
         if (!updated) {
             Serial.println("Sensor not found for the given UUID.");
         }
@@ -120,7 +120,7 @@ void mqtt_callback(char* topic, byte* message, unsigned int length) {
    }else if(jsonDoc.containsKey("debug")){
     Serial.print("Debuggin portion");
    } else{
-    enkiLog log = {topic, "","Unknown request recivied"};
+    mksLog log = {topic, "","Unknown request recivied"};
     triggerLog(&log);      
    }
    

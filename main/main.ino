@@ -2,7 +2,7 @@
 #include <PubSubClient.h>
 #include <Wire.h>
 #include <WiFiClientSecure.h>
-#include "Enkitek.h"
+#include "Mks.h"
 #include "Config.h"
 #include <ArduinoJson.h>
 
@@ -11,8 +11,8 @@ IOTcrons defaultCrons[] = {{-1, ""}};
 char* ssid = "BSNL-FTTH_EXT";
 char* password = "punnathanath1234";
 char* mqtt_server = "e6e9ee8b38ee449b9d81904534040e41.s2.eu.hivemq.cloud";
-char *mqttUsername = "enkitek";  // Replace with your MQTT username (if needed)
-char *mqttPassword = "EnkiDev123456";  // Replace with your MQTT password (if needed)
+char *mqttUsername = "mks";  // Replace with your MQTT username (if needed)
+char *mqttPassword = "test1234";  // Replace with your MQTT password (if needed)
 
 sensor stringArray[] = {
   {"MKS/TH/001",  "0", defaultCrons, 1},
@@ -30,11 +30,11 @@ int stringArrayCount = sizeof(stringArray) / sizeof(stringArray[0]);
 WiFiClientSecure espClient;
 
 PubSubClient client(espClient);
-Enkitek enki;
+Mks mks;
 // LED Pin
 const int ledPin = 4;
 
-void triggerAction(enkiDevice* device){
+void triggerAction(mksDevice* device){
   DynamicJsonDocument jsonDoc(256);
   jsonDoc["sensorUUID"] = device->uuid;
   char* topic = "sensor-actuator";
@@ -59,10 +59,10 @@ void triggerAction(enkiDevice* device){
     }
   String jsonString;
   serializeJson(jsonDoc, jsonString);    
-  enkiMqttPblish(topic, jsonString);    
+  mksMqttPblish(topic, jsonString);    
 }
 
-void triggerLog(enkiLog* log){
+void triggerLog(mksLog* log){
  DynamicJsonDocument jsonDoc(256);
   jsonDoc["sensorUUID"] = log->uuid;
   if (log->healthCheck != nullptr && log->healthCheck[0] != '\0') {
@@ -72,9 +72,9 @@ void triggerLog(enkiLog* log){
   jsonDoc["comments"] = log->comments;     
   String jsonString;
   serializeJson(jsonDoc, jsonString);    
-  enkiMqttPblish("sensor-logging", jsonString);    
+  mksMqttPblish("sensor-logging", jsonString);    
 }
-void enkiMqttPblish(char* topic, String message) {
+void mksMqttPblish(char* topic, String message) {
   const char* payload = message.c_str();
   client.publish(topic, payload);   
   Serial.println("") ;
@@ -93,7 +93,7 @@ void versionCheck(){
     jsonDoc["version"] =  stringArray[i].version ;
   
     serializeJson(jsonDoc, jsonString);
-    enkiMqttPblish("sensor-version",jsonString);   
+    mksMqttPblish("sensor-version",jsonString);   
   }
 }
 
@@ -101,7 +101,7 @@ void reconnect() {
   // Loop until we're reconnected
   if(WiFi.status() != WL_CONNECTED){
     // wifiConnected = false;
-    enki.setup_wifi();    
+    mks.setup_wifi();    
   }
   while (!client.connected()) {
     Serial.print("Attempting MQTT connection...");
@@ -124,7 +124,7 @@ void reconnect() {
 void setup() {
   Serial.begin(115200);
   randomSeed(analogRead(0));  
-  enki.setup_wifi();    
+  mks.setup_wifi();    
   
 
   espClient.setCACert(root_ca);
@@ -132,7 +132,7 @@ void setup() {
   client.setCallback(mqtt_callback);
   boolean res = client.setBufferSize(50*1024);
   reconnect();  
-  enki.setCronInit();
+  mks.setCronInit();
   
   versionCheck();
   pinMode(ledPin, OUTPUT);  

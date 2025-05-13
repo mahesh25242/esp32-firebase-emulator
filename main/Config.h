@@ -15,11 +15,11 @@ struct sensor {
   size_t numCrons; 
 };
 
-struct enkiDevice{
+struct MksDevice{
   char* uuid;    
   const char* state;  
 };
-struct enkiLog{
+struct mksLog{
   char* uuid;    
   char* healthCheck;  
   char* comments;  

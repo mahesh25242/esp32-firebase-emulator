@@ -1,7 +1,7 @@
 # Overview
 The zip file in the root folder contains the library used for cron. This library was created from CronAlarms. However, the ccronexpr it uses is outdated, 
 so I replaced it with a new one developed at [Supertinycron](https://github.com/exander77/supertinycron). To import this into the Arduino IDE, navigate to the "Sketch" menu, then hover over "Include Library". F
-rom there, click "Add .ZIP Library" and select EnkitekCrons.zip from our root folder.
+rom there, click "Add .ZIP Library" and select MksCrons.zip from our root folder.
 
 
 ## Additionally, we are using the following libraries:
@@ -15,8 +15,8 @@ Setup in the main.ino file, you'll find the following configuration:
 char* ssid = "BSNL-FTTH_EXT"; // WiFi name
 char* password = ""; // WiFi password
 char* mqtt_server = "e6e9ee8b38ee449b9d81904534040e41.s2.eu.hivemq.cloud"; // HiveMQ URL
-char *mqttUsername = "enkitek";  // Replace with your MQTT username (if needed) 
-char *mqttPassword = "EnkiDev123456"; // HiveMQ password
+char *mqttUsername = "mks123";  // Replace with your MQTT username (if needed) 
+char *mqttPassword = "mks123"; // HiveMQ password
 ```
 
 Below this configuration, you'll see:

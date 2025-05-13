@@ -1,5 +1,5 @@
-#ifndef ENKITEK_H
-#define ENKITEK_H
+#ifndef MKS_H
+#define MKS_H
 #include <Arduino.h>
 #include <PubSubClient.h>
 #include "Config.h"
@@ -15,13 +15,13 @@ class Enkitek {
 
 
 void mqtt_callback(char* topic, byte* message, unsigned int length);    
-void enkiMqttPblish(char* topic, String message);
+void mksMqttPblish(char* topic, String message);
 void triggerAction(enkiDevice* device);
 void resetSensorCron(const char* topic);
 void triggerLog(enkiLog* log);
 
-void enkiNextCronTime();
-void enkiNextCronTime(const int cronId);
+void mksNextCronTime();
+void mksNextCronTime(const int cronId);
 
-extern Enkitek enki;
+extern Mks mks;
 #endif

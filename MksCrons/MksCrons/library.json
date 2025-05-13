@@ -1,0 +1,16 @@
+{
+"name": "MksCrons",
+"frameworks": "Arduino",
+"keywords": "cron, Time, alarm, schedule, date, hour, minute, second, day, week, month, year",
+"description": "Schedule alarms to occur at specific times with crontab syntax",
+"url": "",
+"authors":
+{
+        "name": "Mahesh"
+},
+"repository":
+{
+    "type": "git",
+    "url": ""
+}
+}
